@@ -24,7 +24,7 @@ services:
       placement:
         constraints: [node.role == manager]
   vote:
-    build: ./vote
+    image: jgsqware/voting-app:vote
     ports:
       - "80"
     networks:
