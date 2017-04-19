@@ -1,7 +1,14 @@
-image: docker:latest
+image: docker:17.04.0-ce
 
 stages:
+  - build
+  - publish
   - deploy 
+
+build:
+  stage: build
+  script:
+    docker build -t jgsqware/voting-app:vote ./vote
 
 deploy_staging:
   stage: deploy
@@ -17,6 +24,14 @@ deploy_staging:
     url: http://voting-app-vote.machine.local
   only:
   - master
+
+publish:
+  stage: publish
+  script:
+    - docker login -u jgsqware -p $DOCKER_PASSWORD
+    - docker push jgsqware/voting-app:vote
+  only:
+    - master
 
 deploy_review:
   stage: deploy
@@ -51,3 +66,4 @@ stop_review:
     action: stop
   except:
     - master
+
